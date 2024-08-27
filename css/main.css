@@ -1,0 +1,36 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --dark: #101010;
+    --light: #ffffff;
+    font-size: 16px;
+}
+
+.board {
+    border-collapse: collapse;
+    
+    & tr td {
+        width: 3rem;
+        height: 3rem;
+        border: 0.15rem solid var(--dark);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+
+        &.queen {
+            background-image: url(/assets/queen-black.svg);
+        }
+    }
+
+    & tr:nth-child(even) td:nth-child(odd),
+    & tr:nth-child(odd) td:nth-child(even) {
+        background-color: var(--dark);
+        
+        &.queen {
+            background-image: url(/assets/queen-white.svg);
+        }
+    }
+}
