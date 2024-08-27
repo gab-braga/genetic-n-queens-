@@ -1,3 +1,10 @@
-import { getRandInt, choiceInList } from "/js/service.js";
+import { generateInitialPopulation } from "/js/service.js";
 
-console.log(choiceInList([1, 2, 3, 4, 5, 6, 7, 8]))
+const btn = document.querySelector("#btn");
+const root = document.querySelector("#root");
+
+btn.addEventListener("click", () => {
+    const size = document.querySelector("#size").value || 0;
+    const population  = generateInitialPopulation(size);
+    console.log(population)
+})
