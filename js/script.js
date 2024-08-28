@@ -10,8 +10,8 @@ const POPULATION_SIZE = 8;
 function init() {
     const population  = generateInitialPopulation(POPULATION_SIZE, BOARD_SIZE);
     let contentRoot = "";
-    population.forEach(queens => {
-        contentRoot += formatHtmlForBoard(queens);
+    population.forEach((individual) => {
+        contentRoot += formatHtmlForBoard(individual);
     })
     root.innerHTML = contentRoot;
 }

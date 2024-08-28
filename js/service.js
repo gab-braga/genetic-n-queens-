@@ -1,10 +1,11 @@
 function generateInitialPopulation(populationSize, boardSize) {
     let population = [];
     for(let i = 0; i < populationSize; i++) {
-        let individual = generateQueens(boardSize)
-        population.push(individual)
+        let queens = generateQueens(boardSize);
+        let fitness = calculateFitness(queens);
+        population.push({ queens, fitness });
     }
-    bubbleSort(population, calculateFitness)
+    bubbleSort(population);
     return population;
 }
 
@@ -44,11 +45,10 @@ function removeInList(elem, list) {
     return clone;
 }
 
-function formatHtmlForBoard(queens) {
+function formatHtmlForBoard({ queens, fitness }) {
     let html = `<table class="board">`;
     const size = queens.length;
-    const collisions = calculateFitness(queens);
-    html += `<thead><tr><th colspan='${size}'> Collisions: ${collisions}</th></tr></thead>`;
+    html += `<thead><tr><th colspan='${size}'> Collisions: ${fitness}</th></tr></thead>`;
     const board = generateBoardMap(queens);
     html += "<tbody>";
     for(let y = 0; y < size; y++) {
@@ -71,7 +71,7 @@ function formatHtmlForBoard(queens) {
 function generateBoardMap(queens) {
     let size = queens.length;
     const board = generateEmptyBoardMap(size);
-    queens.forEach(({y, x}) => {
+    queens.forEach(({ y, x }) => {
         board[y][x] = true;
     })
     return board;
@@ -102,12 +102,12 @@ function calculateFitness(queens) {
   return collisions;
 }
 
-function bubbleSort(population, fitness) {
+function bubbleSort(population) {
   let size = population.length;
   for(let i = 0; i < size; i++)
     for(let j = 0; j < (size-i-1); j++) {
-        const a = fitness(population[j]);
-        const b = fitness(population[j+1]);
+        const a = population[j].fitness;
+        const b = population[j+1].fitness;
         if(a > b) {
             let temp = population[j];
             population[j] = population[j+1];
