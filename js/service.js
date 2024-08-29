@@ -5,7 +5,6 @@ function generateInitialPopulation(populationSize, boardSize) {
         let fitness = calculateFitness(queens);
         population.push({ queens, fitness });
     }
-    bubbleSort(population);
     return population;
 }
 
@@ -45,7 +44,15 @@ function removeInList(elem, list) {
     return clone;
 }
 
-function formatHtmlForBoard({ queens, fitness }) {
+function formatHTML(population) {
+    let content = "";
+    population.forEach(individual => {
+        content += formatHTMLForBoard(individual);
+    })
+    return content;
+}
+
+function formatHTMLForBoard({ queens, fitness }) {
     let html = `<table class="board">`;
     const size = queens.length;
     html += `<thead><tr><th colspan='${size}'> Collisions: ${fitness}</th></tr></thead>`;
@@ -118,4 +125,34 @@ function bubbleSort(population) {
 
 }
 
-export { generateInitialPopulation, formatHtmlForBoard }
+function selectIndividuals(population, sizeBoard, per) {
+    const selection = [];
+    const roulette = [];
+    const maxFitness = sizeBoard * (sizeBoard - 1);
+    let maxFactor = 0;
+    
+    population.forEach(({ queens, fitness }) => {
+        const factor = maxFitness - fitness;
+        maxFactor += factor;
+        roulette.push({ queens, fitness, factor });
+    });
+
+    const size = roulette.length;
+    const count = size * per;
+    for(let i = 0; i < count; i++) {
+        let choice = getRandInt(1, maxFactor);
+        for(let j = 0; j < size; j++) {
+            const { queens, fitness, factor } = roulette[j];
+            if(choice <= factor) {
+                selection.push({ queens, fitness });
+                roulette.splice(j, 1);
+                maxFactor -= factor;
+                break;
+            }
+            choice -= factor;
+        }
+    }
+    return selection;
+}
+
+export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals }
