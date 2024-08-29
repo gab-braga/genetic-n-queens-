@@ -155,4 +155,14 @@ function selectIndividuals(population, sizeBoard, per) {
     return selection;
 }
 
-export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals }
+function getSolution(population) {
+    let size = population.length;
+    for(let i = 0; i < size; i++) {
+        const { queens, fitness } = population[i];
+        if(fitness <= 0) {
+            return [{ queens, fitness }];
+        }
+    }
+}
+
+export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution }
