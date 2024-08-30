@@ -5,11 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>N Queens</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/area.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/zoom.css">
     <script src="/js/script.js" defer type="module"></script>
 </head>
 <body>
     
-    <div id="root"></div>
+    <div id="root">
+        <header>
+            <h1>Aplicação do Algoritmo Genético com Problema N Queens</h1>
+            <h2 id="subtitle"></h2>
+        </header>
+
+        <main id="area"></main>
+
+        <div id="modal">
+            <form id="form">
+                <h3>Configurar</h3>
+                <input type="number" name="size" placeholder="Digite o tamanho da população." required min="10">
+                <input type="number" name="board" placeholder="Digite o tamanho do tabuleiro." required min="4">
+                <button>Iniciar</button>
+            </form>
+        </div>
+
+        <div class="zoom">
+            <button id="out">-</button>
+            <button id="in">+</button>
+        </div>
+    </div>
 
 </body>
 </html>

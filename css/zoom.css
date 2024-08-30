@@ -1,0 +1,20 @@
+.zoom {
+    bottom: 3rem;
+    right: 4rem;
+    position: absolute;
+    display: flex;
+    gap: 0.5rem;
+
+    & button {
+        width: 2rem;
+        min-height: 2rem;
+        border-radius: 2rem;
+        border: 1px solid var(--gray);
+        font-size: 1.6rem;
+        cursor: pointer;
+    }
+    
+    & button:hover {
+        transform: scale(1.05);
+    }
+}

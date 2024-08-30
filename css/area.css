@@ -1,0 +1,45 @@
+#area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 1rem;
+    margin: 2rem 3rem;
+    border: 1px solid var(--gray);
+    overflow-x: auto;
+
+    font-size: 6px;
+
+    & .board {
+        border-collapse: collapse;
+    
+        & thead th {
+            font-size: 2.5em;
+        }
+        
+        & tr td {
+            width: 3em;
+            height: 3em;
+            min-width: 3em;
+            border: 0.15em solid var(--dark);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+    
+            &.queen {
+                background-image: url(/assets/queen-black.svg);
+            }
+        }
+    
+        & tr:nth-child(even) td:nth-child(odd),
+        & tr:nth-child(odd) td:nth-child(even) {
+            background-color: var(--dark);
+            
+            &.queen {
+                background-image: url(/assets/queen-white.svg);
+            }
+        }
+    }
+}

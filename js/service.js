@@ -216,4 +216,8 @@ function mutation(population, boardSize) {
     return geration;
 }
 
-export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution, crossover, mutation }
+function sleep(time) {
+    return new Promise(resolve => setTimeout(resolve, time))
+}
+
+export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution, crossover, mutation, sleep }

@@ -5,20 +5,49 @@ import {
     selectIndividuals,
     getSolution,
     crossover,
-    mutation
+    mutation,
+    sleep
 } from "/js/service.js";
 
-const BOARD_SIZE = 8;
-const POPULATION_SIZE = 100;
-const SPEED = 500;
-const root = document.querySelector("#root");
+const SPEED = 1000;
+const form = document.querySelector("#form");
+const modal = document.querySelector("#modal");
+const btnZoomIn = document.querySelector(".zoom #in");
+const btnZoomOut = document.querySelector(".zoom #out");
+const area = document.querySelector("#area");
+const subtitle = document.querySelector("#subtitle");
 
-function init() {
-    const population  = generateInitialPopulation(POPULATION_SIZE, BOARD_SIZE);
-    genetic(population);
+let zoom = 6;
+let generation_number = 0;
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const size = data.get("size");
+    const boardSize = data.get("board");
+
+    modal.classList.add("hidden");
+    init(size, boardSize);
+});
+
+btnZoomIn.addEventListener("click", () => {
+    zoom += 2;
+    area.style.fontSize = `${zoom}px`;
+});
+
+btnZoomOut.addEventListener("click", () => {
+    zoom -= 2;
+    area.style.fontSize = `${zoom}px`;
+});
+
+function init(size, boardSize) {
+    const population  = generateInitialPopulation(size, boardSize);
+    genetic(population, boardSize);
 }
 
-async function genetic(population) {
+async function genetic(population, boardSize) {
+    generation_number++;
+
     let solution;
     await show(population);
 
@@ -29,8 +58,8 @@ async function genetic(population) {
         return;
     }
     
-    const selection = selectIndividuals(population, BOARD_SIZE, 0.8);
-    const children = crossover(selection, BOARD_SIZE);
+    const selection = selectIndividuals(population, boardSize, 0.8);
+    const children = crossover(selection, boardSize);
 
     await show(children);
 
@@ -40,19 +69,14 @@ async function genetic(population) {
         return;
     }
 
-    const geration = mutation(children, BOARD_SIZE);
+    const geration = mutation(children, boardSize);
 
-    await genetic(geration);
+    await genetic(geration, boardSize);
 }
 
 async function show(population) {
     bubbleSort(population);
-    root.innerHTML = formatHTML(population);
+    subtitle.innerHTML = `${generation_number}° Geração`
+    area.innerHTML = formatHTML(population);
     await sleep(SPEED);
 }
-
-function sleep(time) {
-    return new Promise(resolve => setTimeout(resolve, time))
-}
-
-init();
