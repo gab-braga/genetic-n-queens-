@@ -10,6 +10,7 @@ import {
 
 const BOARD_SIZE = 8;
 const POPULATION_SIZE = 100;
+const SPEED = 500;
 const root = document.querySelector("#root");
 
 function init() {
@@ -18,13 +19,11 @@ function init() {
 }
 
 async function genetic(population) {
-    bubbleSort(population);
+    let solution;
+    await show(population);
 
-    show(population);
 
-    await sleep(2000);
-
-    let solution = getSolution(population);
+    solution = getSolution(population);
     if(!!solution) {
         show(solution);
         return;
@@ -33,9 +32,7 @@ async function genetic(population) {
     const selection = selectIndividuals(population, BOARD_SIZE, 0.8);
     const children = crossover(selection, BOARD_SIZE);
 
-    show(children);
-
-    await sleep(2000);
+    await show(children);
 
     solution = getSolution(children);
     if(!!solution) {
@@ -48,8 +45,10 @@ async function genetic(population) {
     await genetic(geration);
 }
 
-function show(population) {
+async function show(population) {
+    bubbleSort(population);
     root.innerHTML = formatHTML(population);
+    await sleep(SPEED);
 }
 
 function sleep(time) {

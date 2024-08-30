@@ -138,7 +138,9 @@ function selectIndividuals(population, boardSize, per) {
     });
 
     const size = roulette.length;
-    const count = size * per;
+    let count = Math.ceil(size * per);
+    count = (count > 10) ? count : 10;
+
     for(let i = 0; i < count; i++) {
         let choice = getRandInt(1, maxFactor);
         for(let j = 0; j < size; j++) {
