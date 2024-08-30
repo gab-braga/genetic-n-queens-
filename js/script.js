@@ -4,7 +4,8 @@ import {
     formatHTML,
     selectIndividuals,
     getSolution,
-    crossover
+    crossover,
+    mutation
 } from "/js/service.js";
 
 const BOARD_SIZE = 8;
@@ -23,17 +24,28 @@ async function genetic(population) {
 
     await sleep(2000);
 
-    const solution = getSolution(population);
+    let solution = getSolution(population);
     if(!!solution) {
         show(solution);
         return;
     }
     
     const selection = selectIndividuals(population, BOARD_SIZE, 0.8);
-
     const children = crossover(selection, BOARD_SIZE);
 
-    await genetic(children);
+    show(children);
+
+    await sleep(2000);
+
+    solution = getSolution(children);
+    if(!!solution) {
+        show(solution);
+        return;
+    }
+
+    const geration = mutation(children, BOARD_SIZE);
+
+    await genetic(geration);
 }
 
 function show(population) {

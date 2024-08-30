@@ -125,10 +125,10 @@ function bubbleSort(population) {
 
 }
 
-function selectIndividuals(population, sizeBoard, per) {
+function selectIndividuals(population, boardSize, per) {
     const selection = [];
     const roulette = [];
-    const maxFitness = sizeBoard * (sizeBoard - 1);
+    const maxFitness = boardSize * (boardSize - 1);
     let maxFactor = 0;
     
     population.forEach(({ queens, fitness }) => {
@@ -165,10 +165,10 @@ function getSolution(population) {
     }
 }
 
-function crossover(population, sizeBoard) {
+function crossover(population, boardSize) {
     const children = [];
     const size = population.length;
-    const cut = getRandInt(0, sizeBoard - 1);
+    const cut = getRandInt(0, boardSize-1);
 
     for(let i = 0; (i+1) < size; i += 2) {
         const father = population[i];
@@ -191,4 +191,27 @@ function crossover(population, sizeBoard) {
     return children;
 }
 
-export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution, crossover }
+function swap(q1, q2) {
+    const aux = q1.y;
+    q1.y = q2.y;
+    q2.y = aux;
+}
+
+function mutation(population, boardSize) {
+    const geration = [];
+    population.forEach(({ queens }) => {
+        const column1 = getRandInt(0, boardSize-1);
+        const column2 = getRandInt(0, boardSize-1);
+        
+        const gene1 = queens[column1];
+        const gene2 = queens[column2];
+
+        swap(gene1, gene2);
+
+        const fitness = calculateFitness(queens);
+        geration.push({ queens, fitness });
+    });
+    return geration;
+}
+
+export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution, crossover, mutation }
