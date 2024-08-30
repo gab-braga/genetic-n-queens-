@@ -32,11 +32,13 @@ form.addEventListener("submit", (event) => {
 
 btnZoomIn.addEventListener("click", () => {
     zoom += 2;
+    zoom = (zoom > 20) ? 20 : zoom;
     area.style.fontSize = `${zoom}px`;
 });
 
 btnZoomOut.addEventListener("click", () => {
     zoom -= 2;
+    zoom = (zoom < 2) ? 2 : zoom;
     area.style.fontSize = `${zoom}px`;
 });
 
