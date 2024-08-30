@@ -165,4 +165,30 @@ function getSolution(population) {
     }
 }
 
-export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution }
+function crossover(population, sizeBoard) {
+    const children = [];
+    const size = population.length;
+    const cut = getRandInt(0, sizeBoard - 1);
+
+    for(let i = 0; (i+1) < size; i += 2) {
+        const father = population[i];
+        const mother = population[i+1];
+
+        const genes1 = father.queens.slice(0, cut);
+        const genes2 = father.queens.slice(cut);
+        const genes3 = mother.queens.slice(0, cut);
+        const genes4 = mother.queens.slice(cut);
+
+        const child1 = [...genes1, ...genes4];
+        const child2 = [...genes3, ...genes2];
+        
+        const fit1 = calculateFitness(child1);
+        const fit2 = calculateFitness(child2);
+        
+        children.push({ queens: child1, fitness: fit1 });
+        children.push({ queens: child2, fitness: fit2 });
+    }
+    return children;
+}
+
+export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution, crossover }
