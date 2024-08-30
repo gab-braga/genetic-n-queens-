@@ -61,7 +61,8 @@ async function genetic(population, boardSize) {
     }
     
     const selection = selectIndividuals(population, boardSize, 0.8);
-    const children = crossover(selection, boardSize);
+    // const children = crossover(selection, boardSize);
+    const children = selection;
 
     await show(children);
 
