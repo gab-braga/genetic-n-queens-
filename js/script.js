@@ -4,7 +4,6 @@ import {
     formatHTML,
     selectIndividuals,
     getSolution,
-    crossover,
     mutation,
     sleep
 } from "./service.js";
@@ -61,18 +60,8 @@ async function genetic(population, boardSize) {
     }
     
     const selection = selectIndividuals(population, boardSize, 0.8);
-    // const children = crossover(selection, boardSize);
-    const children = selection;
 
-    await show(children);
-
-    solution = getSolution(children);
-    if(!!solution) {
-        show(solution);
-        return;
-    }
-
-    const geration = mutation(children, boardSize);
+    const geration = mutation(selection, boardSize);
 
     await genetic(geration, boardSize);
 }
