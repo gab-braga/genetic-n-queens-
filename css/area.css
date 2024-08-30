@@ -29,7 +29,7 @@
             background-repeat: no-repeat;
     
             &.queen {
-                background-image: url(/assets/queen-black.svg);
+                background-image: url(../assets/queen-black.svg);
             }
         }
     
@@ -38,7 +38,7 @@
             background-color: var(--dark);
             
             &.queen {
-                background-image: url(/assets/queen-white.svg);
+                background-image: url(../assets/queen-white.svg);
             }
         }
     }
