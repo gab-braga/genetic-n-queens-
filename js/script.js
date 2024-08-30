@@ -7,7 +7,7 @@ import {
     crossover,
     mutation,
     sleep
-} from "/js/service.js";
+} from "./service.js";
 
 const SPEED = 1000;
 const form = document.querySelector("#form");
