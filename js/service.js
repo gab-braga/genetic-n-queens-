@@ -1,6 +1,6 @@
 function debug() {
     const queens = generateQueens(8);
-    const fitness = calculateFitness(queens);
+    const fitness = calculateFitness(queens, 8);
     console.log(queens);
     console.log(fitness);
 }
@@ -9,7 +9,7 @@ function generateInitialPopulation(populationSize, boardSize) {
     let population = [];
     for(let i = 0; i < populationSize; i++) {
         let queens = generateQueens(boardSize);
-        let fitness = calculateFitness(queens);
+        let fitness = calculateFitness(queens, boardSize);
         population.push({ queens, fitness });
     }
     return population;
@@ -101,11 +101,11 @@ function generateEmptyBoardMap(size) {
     return board;
 }
 
-function calculateFitness(queens) {
+function calculateFitness(queens, size) {
     let collisions = 0;
-    for(let i = 0; i < 8; i++) {
+    for(let i = 0; i < size; i++) {
         const q1 = queens[i];
-        for(let j = 0; j < 8; j++) {
+        for(let j = 0; j < size; j++) {
             const q2 = queens[j];
             if(i == j) continue;
             const dif_x = Math.abs(q1.x - q2.x);
@@ -133,7 +133,6 @@ function bubbleSort(population) {
 
         }
     }
-
 }
 
 function selectIndividuals(population, boardSize, per) {
@@ -148,11 +147,12 @@ function selectIndividuals(population, boardSize, per) {
         roulette.push({ queens, fitness, factor });
     });
 
-    const size = roulette.length;
+    let size = roulette.length;
     let count = Math.ceil(size * per);
     count = (count > 20) ? count : 20;
 
     for(let i = 0; i < count; i++) {
+        size = roulette.length;
         let choice = getRandInt(1, maxFactor);
         for(let j = 0; j < size; j++) {
             const { queens, fitness, factor } = roulette[j];
@@ -195,8 +195,8 @@ function crossover(population, boardSize) {
         const child1 = [...genes1, ...genes4];
         const child2 = [...genes3, ...genes2];
         
-        const fit1 = calculateFitness(child1);
-        const fit2 = calculateFitness(child2);
+        const fit1 = calculateFitness(child1, boardSize);
+        const fit2 = calculateFitness(child2, boardSize);
         
         children.push({ queens: child1, fitness: fit1 });
         children.push({ queens: child2, fitness: fit2 });
@@ -216,7 +216,7 @@ function mutation(population, boardSize) {
             }
         });
         
-        const fitness = calculateFitness(queens);
+        const fitness = calculateFitness(queens, boardSize);
         geration.push({ queens, fitness });
     });
     return geration;
