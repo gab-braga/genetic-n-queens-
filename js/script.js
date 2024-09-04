@@ -4,11 +4,12 @@ import {
     formatHTML,
     selectIndividuals,
     getSolution,
+    crossover,
     mutation,
     sleep
 } from "./service.js";
 
-const SPEED = 1000;
+const SPEED = 100;
 const form = document.querySelector("#form");
 const modal = document.querySelector("#modal");
 const btnZoomIn = document.querySelector(".zoom #in");
@@ -52,7 +53,6 @@ async function genetic(population, boardSize) {
     let solution;
     await show(population);
 
-
     solution = getSolution(population);
     if(!!solution) {
         show(solution);
@@ -61,7 +61,15 @@ async function genetic(population, boardSize) {
     
     const selection = selectIndividuals(population, boardSize, 0.8);
 
-    const geration = mutation(selection, boardSize);
+    const children = crossover(selection, boardSize);
+
+    solution = getSolution(children);
+    if(!!solution) {
+        show(solution);
+        return;
+    }
+
+    const geration = mutation(children, boardSize);
 
     await genetic(geration, boardSize);
 }

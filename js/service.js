@@ -1,3 +1,10 @@
+function debug() {
+    const queens = generateQueens(8);
+    const fitness = calculateFitness(queens);
+    console.log(queens);
+    console.log(fitness);
+}
+
 function generateInitialPopulation(populationSize, boardSize) {
     let population = [];
     for(let i = 0; i < populationSize; i++) {
@@ -61,11 +68,10 @@ function formatHTMLForBoard({ queens, fitness }) {
     for(let y = 0; y < size; y++) {
         html += "<tr>";
         for(let x = 0; x < size; x++) {
-            if(board[y][x]) {
+            if(board[y][x])
                 html += "<td class='queen'>";
-            } else {
+            else
                 html += "<td>";
-            }
             html += "</td>";
         }
         html += "</tr>";
@@ -97,15 +103,20 @@ function generateEmptyBoardMap(size) {
 
 function calculateFitness(queens) {
     let collisions = 0;
-    queens.forEach(q1 => {
-        queens.forEach(q2 => {
-            if(q1.x != q2.x && q1.y != q2.y) {
-                const dif_x = Math.abs(q1.x - q2.x);
-                const dif_y = Math.abs(q1.y - q2.y);
-                if(dif_x == dif_y) collisions++;
-            }
-        })
-    })
+    for(let i = 0; i < 8; i++) {
+        const q1 = queens[i];
+        for(let j = 0; j < 8; j++) {
+            const q2 = queens[j];
+            if(i == j) continue;
+            const dif_x = Math.abs(q1.x - q2.x);
+            const dif_y = Math.abs(q1.y - q2.y);
+            const diagonal = dif_x === dif_y;
+            const vertical = q1.x === q2.x;
+            const horizontal = q1.y === q2.y;
+            if(diagonal || vertical || horizontal)
+                collisions++
+        }
+    }
   return collisions;
 }
 
@@ -139,7 +150,7 @@ function selectIndividuals(population, boardSize, per) {
 
     const size = roulette.length;
     let count = Math.ceil(size * per);
-    count = (count > 10) ? count : 10;
+    count = (count > 20) ? count : 20;
 
     for(let i = 0; i < count; i++) {
         let choice = getRandInt(1, maxFactor);
@@ -193,23 +204,18 @@ function crossover(population, boardSize) {
     return children;
 }
 
-function swap(q1, q2) {
-    const aux = q1.y;
-    q1.y = q2.y;
-    q2.y = aux;
-}
-
 function mutation(population, boardSize) {
     const geration = [];
     population.forEach(({ queens }) => {
-        const column1 = getRandInt(0, boardSize-1);
-        const column2 = getRandInt(0, boardSize-1);
         
-        const gene1 = queens[column1];
-        const gene2 = queens[column2];
-
-        swap(gene1, gene2);
-
+        queens.forEach(gene => {
+            const test = getRandInt(0, 100);
+            if(test <= 5) {
+                const y = getRandInt(0, boardSize-1);
+                gene.y = y;
+            }
+        });
+        
         const fitness = calculateFitness(queens);
         geration.push({ queens, fitness });
     });
@@ -220,4 +226,15 @@ function sleep(time) {
     return new Promise(resolve => setTimeout(resolve, time))
 }
 
-export { generateInitialPopulation, bubbleSort, formatHTML, selectIndividuals, getSolution, crossover, mutation, sleep }
+export {
+    generateInitialPopulation,
+    bubbleSort,
+    formatHTML,
+    selectIndividuals,
+    getSolution,
+    crossover,
+    mutation,
+    sleep,
+    debug
+}
+
