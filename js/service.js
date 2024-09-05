@@ -84,9 +84,10 @@ function formatHTMLForBoard({ queens, fitness }) {
 function generateBoardMap(queens) {
     let size = queens.length;
     const board = generateEmptyBoardMap(size);
-    queens.forEach(({ y, x }) => {
+    for(let i = 0; i < size; i++) {
+        const { y, x } = queens[i];
         board[y][x] = true;
-    })
+    }
     return board;
 }
 
@@ -135,36 +136,42 @@ function bubbleSort(population) {
     }
 }
 
-function selectIndividuals(population, boardSize, per) {
+function selectIndividuals(population, boardSize, minSize, per) {
     const selection = [];
-    const roulette = [];
-    const maxFitness = boardSize * (boardSize - 1);
-    let maxFactor = 0;
+    const size = population.length;
     
-    population.forEach(({ queens, fitness }) => {
-        const factor = maxFitness - fitness;
-        maxFactor += factor;
-        roulette.push({ queens, fitness, factor });
-    });
+    if(size > minSize) {
+        const roulette = [];
+        const maxFitness = boardSize * (boardSize - 1);
+        let maxFactor = 0;
+        
+        for(let i = 0; i < size; i++) {
+            const { queens, fitness } = population[i];
+            const factor = maxFitness - fitness;
+            maxFactor += factor;
+            roulette.push({ queens, fitness, factor });
+        };
+        
+        let rouletteSize = size;
+        let count = Math.ceil(rouletteSize * per);
+        count = (count >= minSize) ? count : minSize;
 
-    let size = roulette.length;
-    let count = Math.ceil(size * per);
-    count = (count > 20) ? count : 20;
+        for(let i = 0; i < count; i++) {
+            rouletteSize = roulette.length;
+            let choice = getRandInt(1, maxFactor);
 
-    for(let i = 0; i < count; i++) {
-        size = roulette.length;
-        let choice = getRandInt(1, maxFactor);
-        for(let j = 0; j < size; j++) {
-            const { queens, fitness, factor } = roulette[j];
-            if(choice <= factor) {
-                selection.push({ queens, fitness });
-                roulette.splice(j, 1);
-                maxFactor -= factor;
-                break;
+            for(let j = 0; j < rouletteSize; j++) {
+                const { queens, fitness, factor } = roulette[j];
+                if(choice <= factor) {
+                    selection.push({ queens, fitness });
+                    roulette.splice(j, 1);
+                    maxFactor -= factor;
+                    break;
+                }
+                choice -= factor;
             }
-            choice -= factor;
         }
-    }
+    } else return population;
     return selection;
 }
 
@@ -206,19 +213,22 @@ function crossover(population, boardSize) {
 
 function mutation(population, boardSize) {
     const geration = [];
-    population.forEach(({ queens }) => {
+    const size = population.length;
+    for(let i = 0; i < size; i++) {
         
-        queens.forEach(gene => {
+        const { queens } = population[i];
+        for(let j = 0; j < boardSize; j++) {
+            const gene = queens[j];
             const test = getRandInt(0, 100);
             if(test <= 5) {
                 const y = getRandInt(0, boardSize-1);
                 gene.y = y;
             }
-        });
+        };
         
         const fitness = calculateFitness(queens, boardSize);
         geration.push({ queens, fitness });
-    });
+    };
     return geration;
 }
 

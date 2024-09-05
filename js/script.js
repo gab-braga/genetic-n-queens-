@@ -10,6 +10,7 @@ import {
 } from "./service.js";
 
 const SPEED = 100;
+const MIN_SELECT = 30;
 const form = document.querySelector("#form");
 const modal = document.querySelector("#modal");
 const btnZoomIn = document.querySelector(".zoom #in");
@@ -59,8 +60,9 @@ async function genetic(population, boardSize) {
         return;
     }
     
-    const selection = selectIndividuals(population, boardSize, 0.8);
-
+    const selection = selectIndividuals(population, boardSize,MIN_SELECT, 0.8);
+    const size = selection.length;
+    
     const children = crossover(selection, boardSize);
 
     solution = getSolution(children);
