@@ -1,3 +1,5 @@
+import { generateQueens, randInt } from "./utils.js";
+
 function debug() {
     const queens = generateQueens(8);
     const fitness = calculateFitness(queens, 8);
@@ -5,7 +7,7 @@ function debug() {
     console.log(fitness);
 }
 
-function generateInitialPopulation(populationSize, boardSize) {
+function generatePopulation(populationSize, boardSize) {
     let population = [];
     for(let i = 0; i < populationSize; i++) {
         let queens = generateQueens(boardSize);
@@ -15,91 +17,14 @@ function generateInitialPopulation(populationSize, boardSize) {
     return population;
 }
 
-function generateQueens(size) {
-    const queens = [];
-    let cols = generateCols(size);
-    for(let x = 0; x < size; x++) {
-        let y = choiceInList(cols);
-        queens.push({ x, y });
-        cols = removeInList(y, cols)
-    }
-    return queens;
-}
-
-function generateCols(size) {
-    const cols = [];
-    for(let idx = 0; idx < size; idx++) {
-        cols.push(idx);
-    }
-    return cols;
-}
-
-function choiceInList(list) {
-    let size = list.length;
-    let index = getRandInt(0, size - 1);
-    return list[index];
-}
-
-function getRandInt(min, max) {
-    return Math.floor(Math.random() * (1 + max - min)) + min;
-}
-
-function removeInList(elem, list) {
-    let clone = [...list]
-    let index = clone.indexOf(elem);
-    clone.splice(index, 1);
-    return clone;
-}
-
-function formatHTML(population) {
-    let content = "";
-    population.forEach(individual => {
-        content += formatHTMLForBoard(individual);
-    })
-    return content;
-}
-
-function formatHTMLForBoard({ queens, fitness }) {
-    let html = `<table class="board">`;
-    const size = queens.length;
-    html += `<thead><tr><th colspan='${size}'> Collisions: ${fitness}</th></tr></thead>`;
-    const board = generateBoardMap(queens);
-    html += "<tbody>";
-    for(let y = 0; y < size; y++) {
-        html += "<tr>";
-        for(let x = 0; x < size; x++) {
-            if(board[y][x])
-                html += "<td class='queen'>";
-            else
-                html += "<td>";
-            html += "</td>";
-        }
-        html += "</tr>";
-    }
-    html += "</tbody>";
-    html += "</table>";
-    return html;
-}
-
-function generateBoardMap(queens) {
-    let size = queens.length;
-    const board = generateEmptyBoardMap(size);
+function getSolution(population) {
+    let size = population.length;
     for(let i = 0; i < size; i++) {
-        const { y, x } = queens[i];
-        board[y][x] = true;
+        const { queens, fitness } = population[i];
+        if(fitness <= 0) {
+            return [{ queens, fitness }];
+        }
     }
-    return board;
-}
-
-function generateEmptyBoardMap(size) {
-    let board = [];
-    for(let y = 0; y < size; y++) {
-        let row = [];
-        for(let x = 0; x < size; x++)
-            row.push(false);
-        board.push(row);
-    }
-    return board;
 }
 
 function calculateFitness(queens, size) {
@@ -121,22 +46,7 @@ function calculateFitness(queens, size) {
   return collisions;
 }
 
-function bubbleSort(population) {
-  let size = population.length;
-  for(let i = 0; i < size; i++)
-    for(let j = 0; j < (size-i-1); j++) {
-        const a = population[j].fitness;
-        const b = population[j+1].fitness;
-        if(a > b) {
-            let temp = population[j];
-            population[j] = population[j+1];
-            population[j+1] = temp;
-
-        }
-    }
-}
-
-function selectIndividuals(population, boardSize, minSize, per) {
+function select(population, boardSize, minSize, per) {
     const selection = [];
     const size = population.length;
     
@@ -158,7 +68,7 @@ function selectIndividuals(population, boardSize, minSize, per) {
 
         for(let i = 0; i < count; i++) {
             rouletteSize = roulette.length;
-            let choice = getRandInt(1, maxFactor);
+            let choice = randInt(1, maxFactor);
 
             for(let j = 0; j < rouletteSize; j++) {
                 const { queens, fitness, factor } = roulette[j];
@@ -175,20 +85,10 @@ function selectIndividuals(population, boardSize, minSize, per) {
     return selection;
 }
 
-function getSolution(population) {
-    let size = population.length;
-    for(let i = 0; i < size; i++) {
-        const { queens, fitness } = population[i];
-        if(fitness <= 0) {
-            return [{ queens, fitness }];
-        }
-    }
-}
-
 function crossover(population, boardSize) {
     const children = [];
     const size = population.length;
-    const cut = getRandInt(0, boardSize-1);
+    const cut = randInt(0, boardSize-1);
 
     for(let i = 0; (i+1) < size; i += 2) {
         const father = population[i];
@@ -211,7 +111,7 @@ function crossover(population, boardSize) {
     return children;
 }
 
-function mutation(population, boardSize) {
+function mutate(population, boardSize) {
     const geration = [];
     const size = population.length;
     for(let i = 0; i < size; i++) {
@@ -219,9 +119,9 @@ function mutation(population, boardSize) {
         const { queens } = population[i];
         for(let j = 0; j < boardSize; j++) {
             const gene = queens[j];
-            const test = getRandInt(0, 100);
+            const test = randInt(0, 100);
             if(test <= 5) {
-                const y = getRandInt(0, boardSize-1);
+                const y = randInt(0, boardSize-1);
                 gene.y = y;
             }
         };
@@ -232,19 +132,11 @@ function mutation(population, boardSize) {
     return geration;
 }
 
-function sleep(time) {
-    return new Promise(resolve => setTimeout(resolve, time))
-}
-
 export {
-    generateInitialPopulation,
-    bubbleSort,
-    formatHTML,
-    selectIndividuals,
+    generatePopulation,
     getSolution,
+    select,
     crossover,
-    mutation,
-    sleep,
-    debug
-}
+    mutate
+};
 
