@@ -5,7 +5,7 @@ const subtitle = document.querySelector("#subtitle");
 
 const SPEED = 100;
 
-export async function show(population, count, speed=SPEED) {
+export async function show(population, count, speed = SPEED) {
   bubbleSort(population);
   subtitle.innerHTML = `${count}° Geração`;
   area.innerHTML = formatHTML(population);
