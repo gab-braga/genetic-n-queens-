@@ -46,42 +46,31 @@ function calculateFitness(queens, size) {
   return collisions;
 }
 
-function select(population, boardSize, minSize, per) {
+function select(population, boardSize) {
     const selection = [];
     const size = population.length;
+    const roulette = [];
+    const maxFitness = boardSize * (boardSize - 1);
+    let maxFactor = 0;
     
-    if(size > minSize) {
-        const roulette = [];
-        const maxFitness = boardSize * (boardSize - 1);
-        let maxFactor = 0;
-        
-        for(let i = 0; i < size; i++) {
-            const { queens, fitness } = population[i];
-            const factor = maxFitness - fitness;
-            maxFactor += factor;
-            roulette.push({ queens, fitness, factor });
-        };
-        
-        let rouletteSize = size;
-        let count = Math.ceil(rouletteSize * per);
-        count = (count >= minSize) ? count : minSize;
+    for(let i = 0; i < size; i++) {
+        const { queens, fitness } = population[i];
+        const factor = maxFitness - fitness;
+        maxFactor += factor;
+        roulette.push({ queens, fitness, factor });
+    };
 
-        for(let i = 0; i < count; i++) {
-            rouletteSize = roulette.length;
-            let choice = randInt(1, maxFactor);
-
-            for(let j = 0; j < rouletteSize; j++) {
-                const { queens, fitness, factor } = roulette[j];
-                if(choice <= factor) {
-                    selection.push({ queens, fitness });
-                    roulette.splice(j, 1);
-                    maxFactor -= factor;
-                    break;
-                }
-                choice -= factor;
+    for(let i = 0; i < size; i++) {
+        let choice = randInt(1, maxFactor);
+        for(let j = 0; j < size; j++) {
+            const { queens, fitness, factor } = roulette[j];
+            if(choice <= factor) {
+                selection.push({ queens, fitness });
+                break;
             }
+            choice -= factor;
         }
-    } else return population;
+    }
     return selection;
 }
 

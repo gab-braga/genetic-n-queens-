@@ -7,8 +7,6 @@ import {
 } from "./services.js";
 import { show } from "./render.js";
 
-const MIN_SELECT = 30;
-const PER_SELECT = 0.8;
 let count = 0;
 
 function init(size, boardSize) {
@@ -28,7 +26,7 @@ async function genetic(population, boardSize) {
         return;
     }
     
-    const selection = select(population, boardSize, MIN_SELECT, PER_SELECT);
+    const selection = select(population, boardSize);
     
     const children = crossover(selection, boardSize);
 
