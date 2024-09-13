@@ -18,21 +18,12 @@ function bubbleSort(population) {
 
 function generateQueens(size) {
   const queens = [];
-  let cols = generateCols(size);
+  const maxIndex = size - 1;
   for (let x = 0; x < size; x++) {
-    let y = choice(cols);
+    const y = randInt(0, maxIndex);
     queens.push({ x, y });
-    cols = removeElem(y, cols);
   }
   return queens;
-}
-
-function generateCols(size) {
-  const cols = [];
-  for (let idx = 0; idx < size; idx++) {
-    cols.push(idx);
-  }
-  return cols;
 }
 
 function copyQueens(queens) {
@@ -53,13 +44,6 @@ function choice(list) {
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (1 + max - min)) + min;
-}
-
-function removeElem(elem, list) {
-  let clone = [...list];
-  let index = clone.indexOf(elem);
-  clone.splice(index, 1);
-  return clone;
 }
 
 function formatHTML(population) {
@@ -114,10 +98,8 @@ export {
   sleep,
   bubbleSort,
   generateQueens,
-  generateCols,
   copyQueens,
   randInt,
   choice,
-  removeElem,
   formatHTML,
 };
