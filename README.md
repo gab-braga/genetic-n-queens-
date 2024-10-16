@@ -11,4 +11,4 @@ A solução é baseada em um algoritmo genético, uma técnica inspirada pela te
 ![Página 2](https://github.com/user-attachments/assets/bc49fb05-6ada-448c-bf20-718f132a6151)
 
 ### Solução do Algoritmo
-![Página 3](https://github.com/user-attachments/assets/26932cbf-3ecb-4550-8cc4-15472c90eb8c)
+![Página 3](https://github.com/user-attachments/assets/74fa4be2-a18e-445d-bc9a-2da1c6d64c44)
